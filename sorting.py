@@ -421,6 +421,36 @@ def generate_dataset(size, structure="random", dtype_str="int", use_numpy=True):
             choices = [''.join(random.choices(chars, k=5)) for _ in range(5)]
             return [random.choice(choices) for _ in range(size)]
 
+def verify_all_algorithms():
+    algorithms_to_verify = [
+        ("Bubble Sort",       bubble_sort_py),
+        ("Selection Sort",    selection_sort_py),
+        ("Insertion Sort",    insertion_sort_py),
+        ("Shell Sort",        shell_sort_py),
+        ("Merge Sort",        merge_sort_py),
+        ("Quick Sort",        quick_sort_py),
+        ("Heap Sort",         heap_sort_py),
+        ("Parallel Merge",    parallel_merge_sort_py),
+    ]
+
+    test_cases = [
+        [5, 2, 9, 1, 5, 6],
+        [],
+        [1],
+        [3, 3, 3, 3],
+        list(range(100, 0, -1))
+    ]
+
+    for arr in test_cases:
+        expected = sorted(arr)
+        for name, func in algorithms_to_verify:
+            data = arr.copy()
+            func(data)
+            assert data == expected, \
+                f"FAIL: {name} on input {arr}, got {data}"
+
+    print("All correctness checks passed.")
+
 def run_performance_test():
     numba_algorithms = [
         ("Bubble Sort", bubble_sort_numba, True),     
@@ -499,4 +529,5 @@ def run_performance_test():
 
 if __name__ == "__main__":
     sys.setrecursionlimit(200000)
+    verify_all_algorithms()
     run_performance_test()
